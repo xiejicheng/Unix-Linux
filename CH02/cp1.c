@@ -13,7 +13,7 @@
 
 void oops(char *, char *);
 
-main(int ac, char *av[])
+int main(int ac, char *av[])
 {
     int in_fd, out_fd, n_chars;
     char buf[BUFFERSIZE];
@@ -41,7 +41,7 @@ main(int ac, char *av[])
 
 void oops(char *s1, char *s2)
 {
-    fprintf(stderr, "Error: %s", s1);
+    fprintf(stderr, "Error: %s ", s1);
     perror(s2);
     exit(1);
 }

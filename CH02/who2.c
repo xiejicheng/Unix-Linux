@@ -68,3 +68,9 @@ int showtime(long timeval)
     printf("%12.12s",cp + 4);/* pick12 chars from pos 4 */
    
 }
+
+void utmp_close()
+{
+    if( fd_utmp != -1 )
+        close(fd_utmp);           /* open */
+}
