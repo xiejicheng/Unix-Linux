@@ -10,6 +10,7 @@
 
 #define SHOWHOST                                /* 包含远程机器的输出*/
 
+int show_info();
 
 int main()
 {
@@ -39,7 +40,7 @@ int show_info(struct utmp *utbufp)
     printf(" ");                                /* 一个空格 */
     printf("%-8.8s", utbufp -> ut_line);      /* 终端设备 */
     printf(" ");
-    printf("%10ld", utbufp -> ut_time);      /* 登录时间 */
+    printf("%10d", utbufp -> ut_time);      /* 登录时间 */
     printf(" ");
 #ifdef SHOWHOST
     printf("(%s)", utbufp -> ut_host);          /* 主机 */

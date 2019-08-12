@@ -1,3 +1,5 @@
 *.a
 *.o
 /CH02/who1
+/CH02/who2
+/CH02/cp1

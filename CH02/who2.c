@@ -1,38 +1,40 @@
-/* who1.c -a first version of the who program
- *           open, read UTMP file, and show results
+/* who2.c - 读取 etc/utmp 并列出信息
+ * 抑制空白记录
+ * 格式化时间
  */
+
 #include<stdio.h>
+#include<stdlib.h>
 #include<utmp.h>
 #include<fcntl.h>
-#include<unistd.h>
-#include<stdlib.h>
 #include<time.h>
-void show_info(long);
-void showtime(struct utmp *);
-//#define SHOWHOST                   /* include remote machine on putput */
+
+/* #define SHOWOST */
+
+void showtime(long);
+void show_info(struct utmp *);
 
 int main()
 {
-    struct utmp utbuf;   /* read info into here */
-    int utmpfd;                    /* read from this descriptor */
+    struct utmp utbuf;                      /* 读取信息到这里 */
+    int utmpfd;                             /* 从这个描述符读取 */
 
-    if((utmpfd = open(UTMP_FILE, O_RDONLY)) == -1 )
+    if((utmpfd = open(UTMP_FILE, O_RDONLY)) == -1)
     {
-        perror(UTMP_FILE);         /* UTMP_FILE is in utmp.h */
+        perror(UTMP_FILE);
         exit(1);
     }
 
-    while(read( utmpfd, &utbuf, sizeof(utbuf)) == sizeof(utbuf))
-        show_info(&utbuf);
+    while(read(utmpfd, &utbuf, sizeof(utbuf)) == sizeof(utbuf))
+        show_info( &utbuf );
     close(utmpfd);
-    return 0;                      /* went ok */
+    return 0;
 }
 
-/*
- * show info()
- *                  displays the contents of the utmp struct
- *                  in human readable form
- *                  * displays nothing if record has no user name 
+/* show_info()
+ *  显示 utmp 结构的内容
+ *  人们可读的
+ *  如果记录没有用户名，则不显示任何内容
  */
 
 void show_info(struct utmp *utbufp)
@@ -40,37 +42,52 @@ void show_info(struct utmp *utbufp)
     if(utbufp -> ut_type != USER_PROCESS)
         return;
 
-    printf("% -8.8s",utbufp -> ut_name);   /* the logname */
-    printf(" ");                           /* a space */
-    printf("% -8.8s",utbufp -> ut_line);   /* the tty */
+    printf("%-8.8s", utbufp -> ut_name);           /* 登录名 */
     printf(" ");
-    showtime(utbufp -> ut_time);           /* display time */
-#ifdef SHOWHOST
+    printf("%-8.8s", utbufp -> ut_line);           /* 终端信息 */
+    printf(" ");
+    showtime( utbufp -> ut_time );                 /* 显示时间 */
+# ifdef SHOWHOST
     if(utbufp -> ut_host[0] != '\0')
-        printf("(%s)", utbufp -> ut_host);     /* the host */
-#endif
-    printf("\n");                          /*newline */
+        printf("(%s)", utbufp -> ut_host);         /* 主机 */
+# endif
+    printf("\n");
 }
 
-int showtime(long timeval)
+void showtime(long timeval)
 /*
- *      display time in a format fit for human consumption
- *      uses ctime build a string then picks parts out of it
- *      Note: %12.12s prints a string 12 chars wide and LIMITS
- *      in to 12 chars.
+ * 用适合人们查看的格式显示时间
+ * 使用 ctime 创建一个字符串，然后从中提取部分内容
+ * 注意：%12.12s 打印字符串为12字符宽和限制(LIMIT)
  */
 {
-    char *cp;                /* to hold address of time */
-    cp = ctime(&timeval);    /* convert time to string */
-                             /* string looks like */
-                             /* Mon Feb 4 00:46:40 EST 1991 */
-                             /* 0123456789012345. */
-    printf("%12.12s",cp + 4);/* pick12 chars from pos 4 */
-   
+    char *cp;                                   /* 获取地址时间 */
+    cp = ctime(&timeval);                       /* 将时间转换成字符串 */
+                                                /* 字符串的模样 */
+                                                /* Mon Feb 4 00:46:40 EST 1991 */
+                                                /* 0123456789012345 */
+    printf("%12.12s", cp+4);                    /* 从 pos 4 中选择12个字符 */
 }
 
-void utmp_close()
-{
-    if( fd_utmp != -1 )
-        close(fd_utmp);           /* open */
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
