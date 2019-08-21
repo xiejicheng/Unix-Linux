@@ -1,24 +1,12 @@
+/* filesize.c - 打印 passwd 文件的大小 */
 #include<stdio.h>
-#include<sys/types.h>
 #include<sys/stat.h>
 
-int main(int ac, char *av[])
+int main()
 {
-    struct stat info;
-
-    if(ac>1)
-        if( stat(av[1], &info) != -1){
-            show_stat_info(av[1], &info);
-            return 0;
-        }
-        else
-            perror(av[1]);
-    return 1;
-
-}
-
-show_stat_info(char *fname, struct stat *buf)
-{
-    printf("    mode: %o\n", buf -> st_mode);
-
+    struct stat infobuf;                                /* 存储信息的地方 */
+    if(stat("/etc/passwd", &infobuf) == -1)             /* 获取信息 */
+        perror("/etc/passwd");
+    else
+        printf("The size of /etc/passwd is %d\n", infobuf.st_size);
 }
